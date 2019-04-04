@@ -1,44 +1,174 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Page Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+    <!-- <link rel="stylesheet" type="text/css" href="./assets/css/style.css"> -->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 </head>
+
 <body>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <div class="container">
+        <br>
+        <div class="jumbotron">
+            <h1 class="text-center">Anytime is Train Time</h1>
+            <h3 class="text-center">Choo Choo. Chee Chee.</h3>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card card-default">
+                    <div class="card-header">
+                        Current Train Schedule
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <th>Train Name</th>
+                                <th>Destination</th>
+                                <th>Frequency (min)</th>
+                                <th>Next Arrival</th>
+                                <th>Minutes Away</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card card-default">
+                    <div class="card-header">
+                        Add Train
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group row">
+                                <label for="name-input">Train Name</label>
+                                <input class="form-control" id="name-input" type="text">
+                            </div>
+                            <div class="form-group row">
+                                <label for="destination-input">Destination</label>
+                                <input class="form-control" id="destination-input" type="text">
+                            </div>
+                            <div class="form-group row">
+                                <label for="time-input">First Train Time (HH:mm - military time)</label>
+                                <input class="form-control" id="time-input" type="time" min="00:00" max="23:59"> <!-- how to change to 24-hour format??? -->
+                            </div>
+                            <div class="form-group row">
+                                <label for="frequency-input">Frequency (min)</label>
+                                <input class="form-control" id="frequency-input" type="number">
+                            </div>
+                            <button class="btn btn-primary" id="submit-btn" type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="text/javascript">
-	</script>
+        var config = {
+            apiKey: "AIzaSyD25C3FGEHZRGA_hMgA1y_LTFBXVuNj0Ew",
+            authDomain: "train-scheduler-a6b89.firebaseapp.com",
+            databaseURL: "https://train-scheduler-a6b89.firebaseio.com",
+            projectId: "train-scheduler-a6b89",
+            storageBucket: "",
+            messagingSenderId: "507021190415"
+        };
+
+        firebase.initializeApp(config);
+
+        var database = firebase.database();
+
+        $("#submit-btn").on("click", function (event) {
+            event.preventDefault();
+
+            var name = $("#name-input").val().trim();
+            var destination = $("#destination-input").val().trim();
+            var time = moment($("#time-input").val(),"HH:mm").format("HH:mm");
+            var frequency = $("#frequency-input").val().trim();
+
+            /*
+            database.ref().push({
+                name,
+                destination,
+                time,
+                frequency
+            });
+            */
+
+            //if doing directly on-click
+            var nextArrival; // need to calculate - use frequency and first train time
+            var minAway; // = moment().diff(moment(nextArrival, "HH:mm"), "minutes");
+
+            // calculations - see train-example activity
+            /////////
+
+            console.log(name);
+            console.log(destination);
+            console.log(time);
+            console.log(frequency);
+            // console.log(nextArrival);
+            console.log(minAway);
+
+            // var tr = $("<tr>");
+            // var nameTd = $("<td>").text(name);
+            // var destinationTd = $("<td>").text(destination);
+            // var frequencyTd = $("<td>").text(frequency);
+            // var arrivalTd = $("<td>").text(nextArrival);
+            // var minAwayTd = $("<td>").text(minAway);
+
+            // tr.append(nameTd, destinationTd, frequencyTd, arrivalTd, minAwayTd);
+            // $("tbody").append(tr);
+            //////
+
+            $("#name-input").val("");
+            $("#destination-input").val("");
+            $("#time-input").val("");
+            $("#frequency-input").val("");
+        });
+
+        /*
+        database.ref().on("child_added", function (childSnapshot) {
+            // var monthsWorked = moment().diff(moment(childSnapshot.val().date, "MM/DD/YYYY"), "months");
+            // var totalBilled = monthsWorked * childSnapshot.val().rate;
+            var nextArrival; // need to calculate - use frequency and first train time
+            var minAway; // = moment().diff(moment(nextArrival, "HH:mm"), "minutes");
+
+            var tr = $("<tr>");
+            var nameTd = $("<td>").text(childSnapshot.val().name);
+            var destinationTd = $("<td>").text(childSnapshot.val().destination);
+            // var timeTd = $("<td>").text(childSnapshot.val().time);
+            var frequencyTd = $("<td>").text(childSnapshot.val().frequency);
+            var arrivalTd = $("<td>").text(nextArrival); // display non-military time
+            var minAwayTd = $("<td>").text(minAway);
+
+            tr.append(nameTd, destinationTd, frequencyTd, arrivalTd, minAwayTd);
+            $("tbody").append(tr);
+        }, function (errorObject) { // Create Error Handling
+            console.log("The read failed: " + errorObject.code);
+        });
+        */
+    </script>
     <!-- <script src="./assets/javascript/app.js"></script> -->
 </body>
 </html>
-
-<!--
-### Overview
-In this assignment, you'll create a train schedule application that incorporates Firebase to host arrival and departure data. Your app will retrieve and manipulate this information with Moment.js. This website will provide up-to-date information about various trains, namely their arrival times and how many minutes remain until they arrive at their station.
-
-- - -
-### Setup
-* We'll leave that up to you -- however you like. Just make sure you're using Firebase to store data, GitHub to backup your project, and GitHub Pages to host your finished site.
-
-### Instructions
-* Make sure that your app suits this basic spec:
-  * When adding trains, administrators should be able to submit the following:
-    * Train Name
-    * Destination 
-    * First Train Time -- in military time
-    * Frequency -- in minutes
-  * Code this app to calculate when the next train will arrive; this should be relative to the current time.
-  * Users from many different machines must be able to view same train times.
-  * Styling and theme are completely up to you. Get Creative!
-
-### Example Site
-![train homework](./assets/images/Train_Time_Image.png)
-
-### Bonus (Extra Challenges)
-* Consider updating your "minutes to arrival" and "next train time" text once every minute. This is significantly more challenging; only attempt this if you've completed the actual activity and committed it somewhere on GitHub for safekeeping (and maybe create a second GitHub repo).
-* Try adding `update` and `remove` buttons for each train. Let the user edit the row's elements-- allow them to change a train's Name, Destination and Arrival Time (and then, by relation, minutes to arrival).
-* As a final challenge, make it so that only users who log into the site with their Google or GitHub accounts can use your site. You'll need to read up on Firebase authentication for this bonus exercise.
--->
