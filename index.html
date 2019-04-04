@@ -104,42 +104,16 @@
 
             var name = $("#name-input").val().trim();
             var destination = $("#destination-input").val().trim();
-            var time = moment($("#time-input").val(),"HH:mm").format("HH:mm");
+            var time = moment($("#time-input").val(),"HH:mm"); // // first train time
+			//var formattedTime = time.format("HH:mm");
             var frequency = $("#frequency-input").val().trim();
 
-            /*
             database.ref().push({
                 name,
                 destination,
                 time,
                 frequency
             });
-            */
-
-            //if doing directly on-click
-            var nextArrival; // need to calculate - use frequency and first train time
-            var minAway; // = moment().diff(moment(nextArrival, "HH:mm"), "minutes");
-
-            // calculations - see train-example activity
-            /////////
-
-            console.log(name);
-            console.log(destination);
-            console.log(time);
-            console.log(frequency);
-            // console.log(nextArrival);
-            console.log(minAway);
-
-            // var tr = $("<tr>");
-            // var nameTd = $("<td>").text(name);
-            // var destinationTd = $("<td>").text(destination);
-            // var frequencyTd = $("<td>").text(frequency);
-            // var arrivalTd = $("<td>").text(nextArrival);
-            // var minAwayTd = $("<td>").text(minAway);
-
-            // tr.append(nameTd, destinationTd, frequencyTd, arrivalTd, minAwayTd);
-            // $("tbody").append(tr);
-            //////
 
             $("#name-input").val("");
             $("#destination-input").val("");
@@ -147,12 +121,9 @@
             $("#frequency-input").val("");
         });
 
-        /*
         database.ref().on("child_added", function (childSnapshot) {
-            // var monthsWorked = moment().diff(moment(childSnapshot.val().date, "MM/DD/YYYY"), "months");
-            // var totalBilled = monthsWorked * childSnapshot.val().rate;
-            var nextArrival; // need to calculate - use frequency and first train time
-            var minAway; // = moment().diff(moment(nextArrival, "HH:mm"), "minutes");
+			var minAway = childSnapshot.val().frequency - moment().diff(moment(childSnapshot.val().time), "minutes") % childSnapshot.val().frequency;
+            var nextArrival = moment().add(minAway, "minutes").format("HH:mm");
 
             var tr = $("<tr>");
             var nameTd = $("<td>").text(childSnapshot.val().name);
@@ -167,7 +138,6 @@
         }, function (errorObject) { // Create Error Handling
             console.log("The read failed: " + errorObject.code);
         });
-        */
     </script>
     <!-- <script src="./assets/javascript/app.js"></script> -->
 </body>
