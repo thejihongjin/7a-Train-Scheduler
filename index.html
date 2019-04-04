@@ -71,7 +71,7 @@
                             </div>
                             <div class="form-group row">
                                 <label for="time-input">First Train Time (HH:mm - military time)</label>
-                                <input class="form-control" id="time-input" type="time" min="00:00" max="23:59"> <!-- how to change to 24-hour format??? -->
+                                <input class="form-control" id="time-input" type="time"> <!-- how to change to 24-hour format??? -->
                             </div>
                             <div class="form-group row">
                                 <label for="frequency-input">Frequency (min)</label>
@@ -104,9 +104,9 @@
 
             var name = $("#name-input").val().trim();
             var destination = $("#destination-input").val().trim();
-            var time = moment($("#time-input").val(),"HH:mm"); // // first train time
+            var time = moment($("#time-input").val(),"HH:mm").format("HH:mm"); // first train time
 			//var formattedTime = time.format("HH:mm");
-            var frequency = $("#frequency-input").val().trim();
+            var frequency = parseInt($("#frequency-input").val().trim());
 
             database.ref().push({
                 name,
