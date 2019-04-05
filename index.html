@@ -122,8 +122,16 @@
         });
 
         database.ref().on("child_added", function (childSnapshot) {
-			var minAway = childSnapshot.val().frequency - moment().diff(moment(childSnapshot.val().time), "minutes") % childSnapshot.val().frequency;
+
+            //Brian suggestion
+            var timeArr = childSnapshot.val().time.split(":");
+            var trainTime = moment().hours(timeArr[0]).minutes(timeArr[1]);
+            var differenceTimes = moment().diff(trainTime, "minutes");
+            var minAway = childSnapshot.val().frequency - moment().diff(trainTime, "minutes") % childSnapshot.val().frequency;
             var nextArrival = moment().add(minAway, "minutes").format("HH:mm");
+
+			//var minAway = childSnapshot.val().frequency - moment().diff(moment(childSnapshot.val().time), "minutes") % childSnapshot.val().frequency;
+            //var nextArrival = moment().add(minAway, "minutes").format("HH:mm");
 
             var tr = $("<tr>");
             var nameTd = $("<td>").text(childSnapshot.val().name);
